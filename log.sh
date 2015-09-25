@@ -1,10 +1,10 @@
 #!/bin/sh
 
-LOG_PATH=~/logs
+LOG_PATH=~/Dropbox/logs
 
-if [ ! -d $LOG_FILE ]
+if [ ! -d $LOG_PATH ]
 	then 
-	mkdir $LOG_FILE
+	mkdir $LOG_PATH
 	echo "Created log directory" 
 fi
 
@@ -13,6 +13,7 @@ fi
 action=$1
 shift
 
+# Log for yesterday
 if [ "$action" = 'y' ]
 	then
 	NOW=$(date -v-1d '+%F')
@@ -24,19 +25,18 @@ fi
 
 TODAY_FILENAME="log-$NOW.txt"
 
+# Don't use the actual log - just a debug one
 if [ "$action" = 'debug' ]
 	then
 	if [ ! -d $LOG_FILE/debug ]
 		then 
-		mkdir $LOG_FILE/debug#
+		mkdir $LOG_FILE/debug
 		echo "Created debug directory" 
 	fi
 	TODAY_FILENAME="debug/$TODAY_FILENAME"
 	action=$1
 	shift
 fi
-
-echo $action $TODAY_FILENAME
 
 case $action in
 	"a" )
@@ -70,6 +70,9 @@ case $action in
 		;;
 	"g" )
 		grep "$*" $LOG_PATH/*
+		;;
+	"f" )
+		echo $LOG_PATH/$TODAY_FILENAME
 		;;
 	*)
 		echo "Usage l [debug] a|p|d|g|clean [message]"
